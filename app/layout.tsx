@@ -1,4 +1,7 @@
+
 import type { Metadata } from "next";
+
+
 import { Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { WagmiProviderWrapper } from "@/providers/wagmi";
@@ -64,24 +67,24 @@ export const metadata: Metadata = {
     ],
   },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE;
   return (
     <html lang="en">
       <body className={`${robotoCondensed.variable}  antialiased bg-white`}>
         <WagmiProviderWrapper>
           <QueryProvider>
-            <AosInit />
-            <Nav />
+            {!isMaintenance && <AosInit />}
+            {!isMaintenance && <Nav />}
             {children}
-            <Footer />
+            {!isMaintenance && <Footer />}
           </QueryProvider>
         </WagmiProviderWrapper>
-        <Script
+        {!isMaintenance && <Script
             id="tawk-to"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
@@ -97,7 +100,8 @@ export default function RootLayout({
               })();
             `,
             }}
-        />
+        />}
+
       </body>
     </html>
   );
